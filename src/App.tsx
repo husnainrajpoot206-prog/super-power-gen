@@ -48,8 +48,10 @@ function fmtDateTime(iso: string) {
   return new Date(iso).toLocaleString("en-US", { month: "short", day: "2-digit", hour: "2-digit", minute: "2-digit" });
 }
 
-export default function App() {
+export default function App({ session }: { session: any }) {
   const [role, setRole] = useState("ADMIN");
+  const userEmail = session?.user?.email;
+
   const [tab, setTab] = useState("dashboard");
   const [generators, setGenerators] = useState(SEED_GENERATORS);
   const [logs, setLogs] = useState(SEED_LOGS);
@@ -155,7 +157,7 @@ export default function App() {
                 <div style={{ fontSize: 11, color: "#94a3b8" }}>Active Session</div>
               </div>
             </div>
-            <button onClick={() => setRole(r => r === "ADMIN" ? "TEAM" : "ADMIN")} style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8" }} title="Switch Role">
+            <button onClick={async () => { await import('./supabase').then(m => m.supabase.auth.signOut()) }} style={{ background: "none", border: "none", cursor: "pointer", color: "#94a3b8" }} title="Switch Role">
               <LogOut size={15} />
             </button>
           </div>
